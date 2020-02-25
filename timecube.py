@@ -1,10 +1,20 @@
 import time 
 
+# Dumps the contents of the time bank
 def time_remaining():
     for i in range (1, num_players+1):
         print('Player ' + str(i) + ' has ' + str(bank[i]) + 's remaining')
 
+# Returns a players name if it exists, or the passed-in ID otherwise
+def get_player_id(id):
+    if USING_NAMES:
+        return player_names[id-1]
+    else: 
+        return 'Player ' + str(id)
+
 num_players = int(input('Number of players? '))
+player_names = input('Player names? (Optional, leave blank to skip. Separate with spaces.) ').split()
+USING_NAMES = True if len(player_names) == num_players else False
 delay = int(input('Delay? (in seconds) '))
 bankSize = int(input('Reserve time? (in minutes) '))
 cur_player_num = 1
@@ -36,11 +46,11 @@ while(True):
         continue
 
     start_time = time.time()
-    print('It\'s Player ' + str(cur_player_num) + '\'s turn, after ' + str(delay) + 's they will start using their reserve, which has ' + str(bank[cur_player_num]) + 's left.')
+    print('It\'s ' + get_player_id(cur_player_num) + '\'s turn, after ' + str(delay) + 's they will start using their reserve, which has ' + str(bank[cur_player_num]) + 's left.')
 
     command = input('Commands: [p]ause, [e]nd, [n]ext, [j#]ump to player ')
     end_time = time.time()
     turn_time = int(end_time - start_time)
     bank[cur_player_num] -= turn_time - delay if turn_time > delay else 0
-    print('Player ' + str(cur_player_num) + '\'s turn is over after ' + str(turn_time) + 's. Their reserve has ' + str(bank[cur_player_num]) + 's left.')
+    print(get_player_id(cur_player_num) + '\'s turn is over after ' + str(turn_time) + 's. Their reserve has ' + str(bank[cur_player_num]) + 's left.')
     cur_player_num = cur_player_num + 1 if cur_player_num < num_players else 1

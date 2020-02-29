@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Game Clock</title>
+
+    <!--Sylesheets-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+
+    <!--Scripts-->
+    <script src="{{ url_for('static', filename='js/jquery-3.3.1.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/popper.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/socket.io.js') }}"></script>
+</head>
+<body>
+
+    <!--Player Header-->
+    <div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+        <h1 class="display-4" id="player-name"></h1>
+    </div>
+
+    <!--Clocks-->
+    <div id="game-clock" class="container text-center">
+        <div class="card-deck mb-3 text-center">
+            <div class="card mb-6 box-shadow">
+                <div class="card-header">
+                    <h4 class="my-0 font-weight-normal">Delay:</h4>
+                </div>
+                <div class="card-body">
+                    <h5 id="delay-time-left"></h5>
+                </div>
+            </div>
+            <div class="card mb-6 box-shadow">
+                <div class="card-header">
+                    <h4 class="my-0 font-weight-normal">Bank:</h4>
+                </div>
+                <div class="card-body">
+                    <h5 id="bank-time-left"></h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Controls-->
+    <div id="controls" class="container text-center">
+            <div class="btn btn-outline-primary my-2" onclick="socketEmit('previous')"><< <span id="previous-player"></span></div>
+            <div id="pause-btn" class="btn btn-outline-secondary my-2" onclick="socketEmit('pause')">||</div>
+            <div class="btn btn-outline-primary my-2" onclick="socketEmit('next')"><span id="next-player"></span> >></div>
+    </div>
+
+    <!--Socket Script-->
+    <script>
+        // Connect to the socket server.
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+        // Update the status whenever we hear over the socket
+        socket.on('status', function (msg) {
+            $("#player-name").html(msg.current_player);
+            $("#delay-time-left").html(msg.delay_remaining);
+            $("#bank-time-left").html(msg.bank_remaining);
+            $("#next-player").html(msg.next_player);
+            $("#previous-player").html(msg.previous_player);
+
+            if (msg.state == "paused") {
+                $("#pause-btn").addClass("active");
+            } else {
+                $("#pause-btn").removeClass("active");
+            }
+        });
+
+        // Send messages over the socket with commands
+        $("body").keyup(function(e){
+            let keySpace = 32;
+            let keyRight = 39;
+            let keyDown = 40;
+            let keyLeft = 37;
+            let keyEscape = 27;
+
+            if (e.keyCode == keyRight) {
+                socketEmit('next')
+            } else if (e.keyCode == keyLeft) {
+                socketEmit('previous')
+            } else if (e.keyCode == keySpace || e.keyCode == keyDown) {
+                socketEmit('pause')
+            } else if (e.keyCode == keyEscape) {
+                socketEmit('end')
+            }
+        });
+
+        // Simple function to handle the socket emits from both button presses as well as in scripts.
+        function socketEmit(event) {
+            socket.emit(event);
+        }
+    </script>
+</body>
+
+</html>

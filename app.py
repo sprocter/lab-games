@@ -9,15 +9,13 @@ from clocks.increment import Increment
 from clocks.simpledelay import SimpleDelay
 from clocks.countdown import Countdown
 from clocks.hourglass import Hourglass
-from gameclock import GameClock
 
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 app.config['DEBUG'] = True
 socketio = SocketIO(app)
-gc = SimpleDelay(player_names=["Red Team", "Blue Team"])
-# gc = GameClock(number_players=2, delay_amount=30, bank_amount=3, names=["Red Team", "Blue Team"])
+gc = CountUp(player_names=["Red Team", "Blue Team"])
 
 
 @app.route('/')

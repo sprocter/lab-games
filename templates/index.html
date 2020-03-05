@@ -25,18 +25,18 @@
         <div class="card-deck mb-3 text-center">
             <div class="card mb-6 box-shadow">
                 <div class="card-header">
-                    <h4 class="my-0 font-weight-normal">Delay:</h4>
+                    <h4 class="my-0 font-weight-normal">Turn:</h4>
                 </div>
                 <div class="card-body">
-                    <h5 id="delay-time-left"></h5>
+                    <h5 id="turn-time"></h5>
                 </div>
             </div>
             <div class="card mb-6 box-shadow">
                 <div class="card-header">
-                    <h4 class="my-0 font-weight-normal">Bank:</h4>
+                    <h4 class="my-0 font-weight-normal">Total:</h4>
                 </div>
                 <div class="card-body">
-                    <h5 id="bank-time-left"></h5>
+                    <h5 id="total-time"></h5>
                 </div>
             </div>
         </div>
@@ -44,9 +44,9 @@
 
     <!--Controls-->
     <div id="controls" class="container text-center">
-            <div class="btn btn-outline-primary my-2" onclick="socketEmit('previous')"><< <span id="previous-player"></span></div>
-            <div id="pause-btn" class="btn btn-outline-secondary my-2" onclick="socketEmit('pause')">||</div>
-            <div class="btn btn-outline-primary my-2" onclick="socketEmit('next')"><span id="next-player"></span> >></div>
+        <div class="btn btn-outline-primary my-2" onclick="socketEmit('previous')"><< <span id="previous-player"></span></div>
+        <div id="pause-btn" class="btn btn-outline-secondary my-2" onclick="socketEmit('pause')">||</div>
+        <div class="btn btn-outline-primary my-2" onclick="socketEmit('next')"><span id="next-player"></span> >></div>
     </div>
 
     <!--Socket Script-->
@@ -56,13 +56,14 @@
 
         // Update the status whenever we hear over the socket
         socket.on('status', function (msg) {
+            console.log(msg);
             $("#player-name").html(msg.current_player);
-            $("#delay-time-left").html(msg.delay_remaining);
-            $("#bank-time-left").html(msg.bank_remaining);
+            $("#turn-time").html(msg.turn_time);
+            $("#total-time").html(msg.total_time);
             $("#next-player").html(msg.next_player);
             $("#previous-player").html(msg.previous_player);
 
-            if (msg.state == "paused") {
+            if (msg.is_paused) {
                 $("#pause-btn").addClass("active");
             } else {
                 $("#pause-btn").removeClass("active");

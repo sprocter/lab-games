@@ -3,14 +3,19 @@ from time import sleep
 
 from flask import Flask, render_template
 from flask_socketio import SocketIO
-from gameclock import GameClock
+
+from clocks.countup import CountUp
+from clocks.increment import Increment
+from clocks.simpledelay import SimpleDelay
+from clocks.countdown import Countdown
+from clocks.hourglass import Hourglass
 
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 app.config['DEBUG'] = True
 socketio = SocketIO(app)
-gc = GameClock(number_players=2, delay_amount=30, bank_amount=3, names=["Red Team", "Blue Team"])
+gc = CountUp(player_names=["Red Team", "Blue Team"])
 
 
 @app.route('/')
@@ -34,7 +39,7 @@ def connect():
     # Start the interval thread only if the thread has not been started before.
     if not thread.is_alive():
         global gc
-        gc.start()
+        gc.start_player_turn()
 
         thread = StateInterval()
         thread.start()
@@ -49,7 +54,7 @@ def current_state():
     :return: None
     """
     global gc
-    socketio.emit('status', gc.status())
+    socketio.emit('status', gc.get_status())
 
 
 """ Commands related to managing the clock below """
@@ -58,21 +63,21 @@ def current_state():
 @socketio.on('next')
 def next():
     global gc
-    gc.next()
+    gc.next_player()
     current_state()
 
 
 @socketio.on('previous')
 def previous():
     global gc
-    gc.previous()
+    gc.previous_player()
     current_state()
 
 
 @socketio.on('pause')
 def pause():
     global gc
-    gc.pause()
+    gc.pause_player_turn_toggle()
     current_state()
 
 

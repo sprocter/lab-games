@@ -1,3 +1,4 @@
+import os
 from threading import Thread, Event
 from time import sleep
 
@@ -12,7 +13,7 @@ from clocks.hourglass import Hourglass
 
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'secret!'
+app.config['SECRET_KEY'] = os.urandom(24)
 app.config['DEBUG'] = True
 socketio = SocketIO(app)
 gc = CountUp(player_names=["Red Team", "Blue Team"])

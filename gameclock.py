@@ -43,7 +43,7 @@ class GameClock:
         self.delay = delay_amount
         self.bank = [int(bank_amount * 60) for i in range(number_players+1)]
 
-    def start(self):
+    def start_player_turn(self):
         """
         Starts the game clock cycle.
 
@@ -74,7 +74,7 @@ class GameClock:
         if self.bank[self.current_player] <= 0:
             self.bank[self.current_player] = 0
 
-    def next(self):
+    def next_player(self):
         """
         Triggers the transition to the next player in the turn order.
 
@@ -97,7 +97,7 @@ class GameClock:
         # Start the new time for the next player
         self.start_time = time.time()
 
-    def previous(self):
+    def previous_player(self):
         """
         Triggers the transition to the previous player in the turn order.
 
@@ -120,7 +120,7 @@ class GameClock:
         # Start the new time for the next player
         self.start_time = time.time()
 
-    def pause(self):
+    def pause_player_turn_toggle(self):
         """
         Pauses the clock, or resumes if the clock is already paused.
 
@@ -146,7 +146,7 @@ class GameClock:
         """
         # Need to unpause to get an accurate state
         if self.state == "paused":
-            self.pause()
+            self.pause_player_turn_toggle()
 
         # Update the bank with the current turn
         self.update_bank()
@@ -220,7 +220,7 @@ class GameClock:
         seconds %= 60
         return "%d:%02d" % (minutes, seconds)
 
-    def status(self):
+    def get_status(self):
         """
         Gets the full status of the turn, for display on the frontend
 

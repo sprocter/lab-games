@@ -1,5 +1,3 @@
-import time
-
 from clocks.clock import Clock
 
 
@@ -7,7 +5,7 @@ class CountUp(Clock):
     def __init__(self, player_count=0, player_names=None):
         super().__init__(player_count=player_count, player_names=player_names)
 
-        self.clock = [0 for i in range(self.player_count+1)]
+        self.clock = [0 for _ in range(self.player_count+1)]
 
     def next_player(self):
         # Get turn length, and then add it to the clock

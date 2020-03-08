@@ -62,14 +62,14 @@ def current_state():
 
 
 @socketio.on('next')
-def next():
+def next_player():
     global gc
     gc.next_player()
     current_state()
 
 
 @socketio.on('previous')
-def previous():
+def previous_player():
     global gc
     gc.previous_player()
     current_state()

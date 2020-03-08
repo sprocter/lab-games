@@ -1,5 +1,3 @@
-import time
-
 from clocks.clock import Clock
 
 
@@ -9,7 +7,7 @@ class Hourglass(Clock):
             player_names = player_names[:2]
         super().__init__(player_count=2, player_names=player_names)
 
-        self.clock = [int(starting_clock * 60) for i in range(self.player_count+1)]
+        self.clock = [int(starting_clock * 60) for _ in range(self.player_count+1)]
 
     def next_player(self):
         # Get turn length, and then add it to the clock

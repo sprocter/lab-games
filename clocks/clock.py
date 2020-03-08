@@ -1,6 +1,27 @@
 import time
 
 
+def convert_to_formatted_time(seconds):
+    """
+    Converts an int into minutes and seconds.
+    from: https://www.geeksforgeeks.org/python-program-to-convert-seconds-into-hours-minutes-and-seconds/
+
+    :param seconds: The time to convert
+    :return: A string representation in minutes and seconds
+    """
+    seconds = seconds % (24 * 3600)
+    hour = seconds // 3600
+    seconds %= 3600
+    minutes = seconds // 60
+    seconds %= 60
+    if hour > 0:
+        return "%d:%d:%02d" % (hour, minutes, seconds)
+    elif minutes > 0:
+        return "%d:%02d" % (minutes, seconds)
+    else:
+        return ":%02d" % seconds
+
+
 class Clock:
     """
     A timing clock implementation for multiple players. This is a base class which can be extended to implement your
@@ -123,26 +144,6 @@ class Clock:
                 pass
         return "Player " + str(player_id)
 
-    def convert_to_formatted_time(self, seconds):
-        """
-        Converts an int into minutes and seconds.
-        from: https://www.geeksforgeeks.org/python-program-to-convert-seconds-into-hours-minutes-and-seconds/
-
-        :param seconds: The time to convert
-        :return: A string representation in minutes and seconds
-        """
-        seconds = seconds % (24 * 3600)
-        hour = seconds // 3600
-        seconds %= 3600
-        minutes = seconds // 60
-        seconds %= 60
-        if hour > 0:
-            return "%d:%d:%02d" % (hour, minutes, seconds)
-        elif minutes > 0:
-            return "%d:%02d" % (minutes, seconds)
-        else:
-            return ":%02d" % (seconds)
-
     def next_player(self):
         """
         Moves the clock on to the next player.
@@ -198,8 +199,8 @@ class Clock:
         return {"current_player": current_player,
                 "next_player": next_player,
                 "previous_player": previous_player,
-                "turn_time": self.convert_to_formatted_time(turn_time),
-                "total_time": self.convert_to_formatted_time(total_time),
+                "turn_time": convert_to_formatted_time(turn_time),
+                "total_time": convert_to_formatted_time(total_time),
                 "is_paused": self.is_paused()
                 }
 

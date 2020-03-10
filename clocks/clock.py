@@ -15,7 +15,7 @@ def convert_to_formatted_time(seconds):
     minutes = seconds // 60
     seconds %= 60
     if hour > 0:
-        return "%d:%d:%02d" % (hour, minutes, seconds)
+        return "%d:%02d:%02d" % (hour, minutes, seconds)
     elif minutes > 0:
         return "%d:%02d" % (minutes, seconds)
     else:

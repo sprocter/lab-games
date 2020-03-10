@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Game Clock</title>
+
+    <!--Sylesheets-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+
+    <!--Scripts-->
+    <script src="{{ url_for('static', filename='js/jquery-3.3.1.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/popper.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+</head>
+<body>
+    <div id="setup" class="container text-center" style="line-height: 37px;">
+        <form>
+            <div class="form-group row mt-3" id="clock-type">
+                <div class="input-group col-12">
+                    <label for="clock-select" class="col-3 col-form-label">Clock type:</label>
+                    <select class="form-control" id="clock-select">
+                        <option value="count-up">Count Up</option>
+                        <option value="countdown">Countdown</option>
+                        <option value="increment">Increment</option>
+                        <option value="hourglass">Hourglass</option>
+                        <option value="simple-delay">Simple Delay</option>
+                        <option value="bronstein-delay">Bronstein Delay</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="clock-info" class="mb-3">
+                <div class="" id="clock-info-count-up">
+                    Count up is your standard turn timer. The clock starts at 0, and continues to count up while a player is taking their turn.
+                </div>
+                <div class="d-none" id="clock-info-countdown">
+                    Countdown is a normal countdown timer, which has a maximum starting value, and continues to count down while a player is taking their turn.
+                </div>
+                <div class="d-none" id="clock-info-increment">
+                    Increment adds a fixed amount of time (delay time) to the player's time bank at the start of every turn.
+                </div>
+                <div class="d-none" id="clock-info-hourglass">
+                    Hourglass timing adds player 1's used time on their turn to player 2's bank, and visa versa. This clock can only be used with two players.
+                </div>
+                <div class="d-none" id="clock-info-simple-delay">
+                    Simple delay adds a small amount of time at the start fo a player's turn which is not counted against their time bank. After this delay, the player starts using time from their bank.
+                </div>
+                <div class="d-none" id="clock-info-bronstein-delay">
+                    Bronstein delay adds a small amount of time at the start fo a player's turn which is not counted against their time bank. After this delay, the player starts using time from their bank. However if they finish their turn before the delay is used up, the extra time is added to their bank.
+                </div>
+            </div>
+
+            <div class="form-group row" id="clock-timing">
+                <div class="input-group mb-3 col-12 d-none" id="clock-timing-start">
+                    <label for="bank-time" class="col-3 col-form-label">Bank time:</label>
+                    <input class="form-control" type="number" value="3" id="bank-time">
+                    <div class="input-group-append">
+                        <span class="input-group-text" id="bank-time-addon">minutes</span>
+                    </div>
+                </div>
+                <div class="input-group mb-3 col-12 d-none" id="clock-timing-delay">
+                    <label for="delay-time" class="col-3 col-form-label">Delay time:</label>
+                    <input class="form-control" type="number" value="30" id="delay-time">
+                    <div class="input-group-append">
+                        <span class="input-group-text" id="delay-time-addon">seconds</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row" id="clock-names">
+                <div class="input-group mb-3 col-12 col-md-8 col-lg-9 col-xl-9">
+                    <label for="add-name" class="col-3 col-md-4 col-form-label">Add name:</label>
+                    <input type="text" class="form-control" id="add-name" placeholder="Enter a player name here and press enter...">
+                </div>
+                <div class="input-group col-12 col-md-4 col-lg-3 col-xl-3 justify-content-center">
+                    <button type="button" class="btn btn-outline-secondary mb-3" onclick="twoTeamQuickstart()">Two Team Quickstart</button>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-2 col-md-3 col-lg-4"></div>
+                <ul class="list-group col-8 col-md-6 col-lg-4" id="names">
+                </ul>
+            </div>
+
+            <div class="form-group" id="clock-submit">
+                <input id="start-clock" class="btn btn-primary" type="button" value="Start the clock!" onclick="submitSetup()" disabled>
+            </div>
+        </form>
+    </div>
+    <script src="{{ url_for('static', filename='js/setup.js') }}"></script>
+    <script>
+        // Submit function to be triggered on submit button press. Need to have this here due to url_for calls
+        function submitSetup() {
+            if (names.length > 1) {
+                // Gather all the data
+                let data = {
+                    "type": $("#clock-select").val(),
+                    "bank": $("#bank-time").val(),
+                    "delay": $("#delay-time").val(),
+                    "names": names
+                };
+
+                // Send data via POST request to setup url. Redirect on success
+                $.ajax({
+                    type : "POST",
+                    url: "{{ url_for('setup') }}",
+                    data: JSON.stringify(data, null, '\t'),
+                    contentType: 'application/json;charset=UTF-8',
+                    success: function (response) {
+                        console.log(response);
+                        window.location.replace("{{ url_for('clock') }}")
+                    },
+                    error: function (response) {
+                        console.log(response)
+                    }
+                })
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -44,9 +44,9 @@
 
     <!--Controls-->
     <div id="controls" class="container text-center">
-        <div class="btn btn-outline-primary my-2" onclick="socketEmit('previous')"><< <span id="previous-player"></span></div>
+        <div class="btn btn-outline-primary my-2" onclick="previousPlayer()"><< <span id="previous-player"></span></div>
         <div id="pause-btn" class="btn btn-outline-secondary my-2" onclick="socketEmit('pause')">||</div>
-        <div class="btn btn-outline-primary my-2" onclick="socketEmit('next')"><span id="next-player"></span> >></div>
+        <div class="btn btn-outline-primary my-2" onclick="nextPlayer()"><span id="next-player"></span> >></div>
     </div>
 
     <script src="{{ url_for('static', filename='js/clock.js') }}"></script>

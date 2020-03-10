@@ -176,4 +176,4 @@ class StateInterval(Thread):
 
 
 if __name__ == '__main__':
-    socketio.run(app)
+    socketio.run(app, host='localhost', port=8080)

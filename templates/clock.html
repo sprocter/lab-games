@@ -49,7 +49,19 @@
         <div class="btn btn-outline-primary my-2" onclick="nextPlayer()"><span id="next-player"></span> >></div>
     </div>
 
+    <div id="sound"></div>
+
     <script src="{{ url_for('static', filename='js/clock.js') }}"></script>
+    <script>
+        function playNotification(){
+            var filename = "{{ url_for('static', filename='audio/clearly-from-notificationsounds-dot-com.mp3') }}";
+            var mp3Source = '<source src="' + filename + '" type="audio/mpeg">';
+            var embedSource = '<embed hidden="true" autostart="true" loop="false" src="' + filename +'">';
+            filename = "{{ url_for('static', filename='audio/clearly-from-notificationsounds-dot-com.ogg') }}";
+            var oggSource = '<source src="' + filename + '" type="audio/ogg">';
+            document.getElementById("sound").innerHTML='<audio autoplay="autoplay">' + mp3Source + oggSource + embedSource + '</audio>';
+        }
+    </script>
 </body>
 
 </html>

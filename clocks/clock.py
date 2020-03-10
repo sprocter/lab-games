@@ -201,7 +201,8 @@ class Clock:
                 "previous_player": previous_player,
                 "turn_time": convert_to_formatted_time(turn_time),
                 "total_time": convert_to_formatted_time(total_time),
-                "is_paused": self.is_paused()
+                "is_paused": self.is_paused(),
+                "clock_type": self.__class__.__name__
                 }
 
     def get_total_time(self):

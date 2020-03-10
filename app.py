@@ -16,6 +16,7 @@ from clocks.hourglass import Hourglass
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24)
 app.config['DEBUG'] = True
+app.config['SERVER_NAME'] = os.environ.get('CLOCK_SERVER', 'localhost:8080')
 socketio = SocketIO(app)
 gc = None
 
@@ -176,4 +177,4 @@ class StateInterval(Thread):
 
 
 if __name__ == '__main__':
-    socketio.run(app, host='localhost', port=8080)
+    socketio.run(app)

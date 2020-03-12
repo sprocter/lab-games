@@ -2,6 +2,7 @@
 var socket = io.connect('http://' + document.domain + ':' + location.port);
 
 var currentTimeout = null;
+var lastBank = null;
 // Update the status whenever we hear over the socket
 socket.on('status', function (msg) {
     console.log(msg);
@@ -21,16 +22,18 @@ socket.on('status', function (msg) {
     }
 
     // If not doing a simple count up, trigger visual cues
-    if (msg.clock_type !== "CountUp"){
+    if (msg.clock_type !== "CountUp") {
         let seconds = parseInt(msg.total_time.substr(msg.total_time.length-2));
-
-        if (msg.total_time === ":00") {
-            setBackground("#dc3545", true)
-        } else if (msg.total_time.length === 3 && (seconds === 30 || seconds < 10 || (seconds < 30 && seconds > 0 && (seconds % 5 === 0)))) {
-            flashBackground("#ffc107")
-        } else if (seconds === 0) {
-            flashBackground("#9ca7af")
+        if (lastBank !== msg.total_time) {
+            if (msg.total_time === ":00") {
+                setBackground("#dc3545", true)
+            } else if (msg.total_time.length === 3 && (seconds === 30 || seconds < 10 || (seconds < 30 && seconds > 0 && (seconds % 5 === 0)))) {
+                flashBackground("#ffc107")
+            } else if (seconds === 0) {
+                flashBackground("#9ca7af")
+            }
         }
+        lastBank = msg.total_time;
     }
 });
 

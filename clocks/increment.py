@@ -7,7 +7,7 @@ class Increment(Clock):
     def __init__(self, player_count=0, player_names=None, increment_amount=30, starting_clock=5):
         super().__init__(player_count=player_count, player_names=player_names)
 
-        self.clock = [int(starting_clock * 60) for i in range(self.player_count+1)]
+        self.clock = [int(starting_clock * 60) for _ in range(self.player_count+1)]
         self.increment = increment_amount
         self.clock[self.current_player] += self.increment  # One time increase to first players clock
 
